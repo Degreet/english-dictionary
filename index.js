@@ -32,7 +32,8 @@ async function requestHandler(req, resp) {
       const match = path.match(/\.(\w+)$/), ext = match ? match[1] : 'html'
 
       if (path.endsWith("/public/index.html")) {
-        resp.end(await getPage(`${appName} - Главная`, buildPath("index.html")))
+        const result = await getPage(`${appName} - Главная`, buildPath("index.html"))
+        resp.end(result)
       } else {
         fs.createReadStream(path).pipe(resp)
         resp.setHeader('Content-Type', {
@@ -55,7 +56,7 @@ async function requestHandler(req, resp) {
 
 async function getPage(title, path, script) {
   const [file, body] = await Promise.all([fsp.readFile(path),
-    fsp.readFile(buildPath("templates/main.html"))])
+  fsp.readFile(buildPath("templates/main.html"))])
   const html = body.toString()
     .replace("PAGE_TITLE", title)
     .replace("PAGE_BODY", file.toString())

@@ -160,3 +160,20 @@
   margin-top: 6px;
   box-shadow: none;
 }
+
+.toast {
+  border-radius: 3px;
+  color: #fff;
+}
+
+.toast.error-toast {
+  background: #f45d48;
+}
+
+.toast.success-toast {
+  background: #004643;
+}
+
+.toast .toast-close {
+  color: #ffffff21;
+}

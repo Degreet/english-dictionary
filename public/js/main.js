@@ -34,8 +34,8 @@ regNextBtn.onclick = () => {
     error = "Введенные пароли не совпадают"
 
   if (error) {
-    toaster.log(error)
+    toaster.log(error, "error-toast toast")
   } else {
-    toaster.log("Успех!")
+    toaster.log("Успех!", "success-toast toast")
   }
 }

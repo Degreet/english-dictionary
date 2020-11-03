@@ -23,6 +23,54 @@ async function requestHandler(req, resp) {
 
   if (url.startsWith('/api/')) {
     url = url.slice(5)
+
+    if (url == "reg") {
+      const user = JSON.parse(await streamToString(req))
+      const candidate = await getCandidate({ login: user.login })
+      const data = {}
+
+      if (candidate) {
+        data.success = false
+        data.msg = "Такой логин уже занят"
+      } else {
+        const token = generateToken()
+
+        user.token = token
+        user.date = generateDate()
+        user.pass = bcrypt.hashSync(user.pass, 10)
+
+        cookies.set("token", token)
+        await users.insertOne(user)
+        data.success = true
+      }
+
+      resp.end(JSON.stringify(data))
+    } else if (url == "auth") {
+      const user = JSON.parse(await streamToString(req))
+      const candidate = await getCandidate({ login: user.login })
+      const data = {}
+
+      if (candidate) {
+        const checkPass = bcrypt.compareSync(user.pass, candidate.pass)
+
+        if (checkPass) {
+          const token = generateToken()
+
+          cookies.set("token", token)
+          await users.updateOne({ _id: candidate._id }, { $set: { token } })
+
+          data.success = true
+        } else {
+          data.success = false
+          data.msg = "Неверный пароль"
+        }
+      } else {
+        data.success = false
+        data.msg = "Пользователь не найден"
+      }
+
+      resp.end(JSON.stringify(data))
+    }
   } else {
     let path = process.cwd() + '/public' + url.replace(/\/$/, '')
 
@@ -32,7 +80,16 @@ async function requestHandler(req, resp) {
       const match = path.match(/\.(\w+)$/), ext = match ? match[1] : 'html'
 
       if (path.endsWith("/public/index.html")) {
-        const result = await getPage(`${appName} - Главная`, buildPath("index.html"), { path: "main", type: "module" })
+        const candidate = await getCandidate({ cookies })
+        let result
+
+        if (candidate) {
+          result = `<script>location.href = "/dashboard"</script>`
+        } else {
+          result = await getPage(`${appName} - Главная`, buildPath("index.html"),
+            { path: "main", type: "module" })
+        }
+
         resp.end(result)
       } else {
         fs.createReadStream(path).pipe(resp)
@@ -69,9 +126,21 @@ function buildPath(path) {
   return `${__dirname}/public/${path}`
 }
 
-async function getCandidate(cookies) {
-  const token = cookies.get("token")
-  return await users.findOne({ token })
+function generateDate() {
+  return new Date().toISOString().slice(0, 19).replace("T", " ")
+}
+
+async function getCandidate(data) {
+  const forSearch = {}
+
+  if (data.cookies) {
+    const token = data.cookies.get("token")
+    forSearch.token = token
+  } else if (data.login) {
+    forSearch.login = data.login
+  }
+
+  return await users.findOne(forSearch)
 }
 
 function streamToString(stream) {

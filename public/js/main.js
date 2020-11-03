@@ -36,6 +36,33 @@ regNextBtn.onclick = () => {
   if (error) {
     toaster.log(error, "error-toast toast")
   } else {
-    toaster.log("Успех!", "success-toast toast")
+    fetch("/api/reg", {
+      method: "POST",
+      body: JSON.stringify({ login, pass })
+    }).then(resp => resp.json()).then(data => {
+      if (data.success) {
+        toaster.log("Вы успешно зарегистрировались!", "success-toast toast")
+        setTimeout(() => location.href = "/dashboard", 1200)
+      } else {
+        toaster.log(data.msg, "error-toast toast")
+      }
+    })
   }
+}
+
+authNextBtn.onclick = () => {
+  const login = authLoginInp.value
+  const pass = authPassInp.value
+
+  fetch("/api/auth", {
+    method: "POST",
+    body: JSON.stringify({ login, pass })
+  }).then(resp => resp.json()).then(data => {
+    if (data.success) {
+      toaster.log("Вы успешно авторизовались!", "success-toast toast")
+      setTimeout(() => location.href = "/dashboard", 1200)
+    } else {
+      toaster.log(data.msg, "error-toast toast")
+    }
+  })
 }

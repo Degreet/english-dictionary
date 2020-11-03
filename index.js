@@ -71,6 +71,18 @@ async function requestHandler(req, resp) {
 
       resp.end(JSON.stringify(data))
     }
+  } else if (url == "/dashboard") {
+    const candidate = await getCandidate({ cookies })
+    let result
+
+    if (candidate) {
+      result = await getPage(`${appName} - Личный кабинет`, buildPath("dashboard.html"),
+        { path: "dashboard" })
+    } else {
+      result = "<script>location.href = '/'</script>"
+    }
+
+    resp.end(result)
   } else {
     let path = process.cwd() + '/public' + url.replace(/\/$/, '')
 

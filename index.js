@@ -32,7 +32,7 @@ async function requestHandler(req, resp) {
       const match = path.match(/\.(\w+)$/), ext = match ? match[1] : 'html'
 
       if (path.endsWith("/public/index.html")) {
-        const result = await getPage(`${appName} - Главная`, buildPath("index.html"), "main")
+        const result = await getPage(`${appName} - Главная`, buildPath("index.html"), { path: "main", type: "module" })
         resp.end(result)
       } else {
         fs.createReadStream(path).pipe(resp)
@@ -60,7 +60,8 @@ async function getPage(title, path, script) {
   const html = body.toString()
     .replace("PAGE_TITLE", title)
     .replace("PAGE_BODY", file.toString())
-    .replace("PAGE_SCRIPT", script ? /*html*/`<script src="/js/${script}.js"></script>` : "")
+    .replace("PAGE_SCRIPT", script ? `<script src="/js/${script.path}.js"
+      ${script.type == "module" ? 'type="module"' : ""}></script>` : "")
   return html
 }
 

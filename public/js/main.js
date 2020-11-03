@@ -1,3 +1,13 @@
+import Toaster from '../Toaster/Toaster.js'
+
+const toaster = new Toaster({
+  side: "bottom-right",
+  limit: 5,
+  life: 5,
+  width: 30,
+  gap: 10
+})
+
 document.querySelectorAll(".toRegBtn").forEach(btn => btn.onclick = () => {
   auth.hidden = true
   main.hidden = true
@@ -9,3 +19,23 @@ document.querySelectorAll(".toAuthBtn").forEach(btn => btn.onclick = () => {
   main.hidden = true
   reg.hidden = true
 })
+
+regNextBtn.onclick = () => {
+  const login = regLoginInp.value
+  const pass = regPassInp.value
+  const passConf = regPassConfInp.value
+  let error
+
+  if (login.length < 3 || login.length > 20)
+    error = "Логин должен содержать от 3 до 20 символов"
+  else if (pass.length < 8 || pass.length > 32)
+    error = "Пароль должен содержать от 8 до 32 символов"
+  else if (pass != passConf)
+    error = "Введенные пароли не совпадают"
+
+  if (error) {
+    toaster.log(error)
+  } else {
+    toaster.log("Успех!")
+  }
+}

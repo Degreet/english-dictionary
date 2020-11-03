@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<div id="reg" hidden>
+<div id="reg" class="form" hidden>
   <div>
     <h1 class="title">Регистрация</h1>
     <form>
@@ -26,7 +26,16 @@
   </div>
 </div>
 
-<div id="auth" hidden>
-  <h1 class="title">Авторизация</h1>
-  
+<div id="auth" class="form" hidden>
+  <div>
+    <h1 class="title">Авторизация</h1>
+    <form>
+      <input type="text" placeholder="Введите логин" autocomplete="off" id="authLoginInp">
+      <input type="password" placeholder="Введите пароль" id="authPassInp">
+      <div class="button-inline-block">
+        <button type="button" class="button-success" id="authNextBtn">Продолжить</button>
+        <button type="button" class="button-success toRegBtn">Зарегистрироваться</button>
+      </div>
+    </form>
+  </div>
 </div>

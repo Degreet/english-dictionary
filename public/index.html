@@ -1,8 +1,8 @@
-<div class="center">
+<div class="center" hidden>
   <div class="button-list">
     <div class="button-block">
       <span>Уже зарегистрированы?</span>
-      <button>Войти</button>
+      <button class="toAuthBtn">Войти</button>
     </div>
     <div class="button-block">
       <span>Ещё не зарегистрированы?</span>
@@ -10,3 +10,23 @@
     </div>
   </div>
 </div>
+
+<div id="reg">
+  <div>
+    <h1 class="title">Регистрация</h1>
+    <form>
+      <input type="text" placeholder="Придумайте логин" autocomplete="off" id="regLoginInp">
+      <input type="password" placeholder="Придумайте пароль" id="regPassInp">
+      <input type="password" placeholder="Повторите пароль" id="regPassCibfInp">
+      <div class="button-inline-block">
+        <button type="button" class="button-success" id="regNextBtn">Продолжить</button>
+        <button type="button" class="button-success toAuthBtn">Войти</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- <div id="auth">
+  <h1 class="title">Авторизация</h1>
+  
+</div> -->

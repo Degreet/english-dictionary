@@ -32,7 +32,7 @@ async function requestHandler(req, resp) {
       const match = path.match(/\.(\w+)$/), ext = match ? match[1] : 'html'
 
       if (path.endsWith("/public/index.html")) {
-        const result = await getPage(`${appName} - Главная`, buildPath("index.html"))
+        const result = await getPage(`${appName} - Главная`, buildPath("index.html"), "main")
         resp.end(result)
       } else {
         fs.createReadStream(path).pipe(resp)
